@@ -1,0 +1,106 @@
+﻿@model IEnumerable<Manga>
+
+
+@{
+    ViewBag.Title = "HÜMAT - Mangalarımız";
+}
+
+<div class="main-slider"
+     data-tesla-plugin="slider"
+     data-tesla-item=".slide"
+     data-tesla-next=".slide-right"
+     data-tesla-prev=".slide-left"
+     data-tesla-container=".slide-wrapper"
+     style="margin-top: -50px">
+    <ul class="slide-arrows">
+        <li class="slide-left"><i class="fa fa-arrow-left"></i></li>
+        <li class="slide-right"><i class="fa fa-arrow-right"></i></li>
+    </ul>
+    <ul class="slide-wrapper">
+        @for (int i = 0; i < 5 && i < Model.Count(); i++)
+        {
+            var item = Model.OrderByDescending(t => t.UploadDate).ElementAt(i);
+            <li class="slide">
+                <div class="container">
+                    <div class="slide-text">
+                        <h1>@item.Title</h1>
+                        @if (item.Summary != null && item.Summary.Length > 300)
+                        {
+                            <p>@item.Summary.Substring(0, 300) ...</p>
+                        }
+                        else
+                        {
+                            <p>@item.Summary</p>
+
+                        }
+                        <a asp-controller="Manga"
+                           asp-action="Details"
+                           asp-route-id="@item.Id"
+                           class="slider-link">Görüntüle</a>
+                    </div>
+                </div>
+                <img src="@item.ImageUrl"
+                     alt="slider image"
+                     height="800" />
+            </li>
+        }
+
+    </ul>
+</div>
+<div class="big-container">
+    <div class="site-title">
+        <h1>Mangalarımız</h1>
+    </div>
+    <div class="row"
+         data-tesla-plugin="masonry"
+         id="posts">
+        @foreach (var item in Model.OrderBy(t => t.Title))
+        {
+            <div class="col-xs-6 col-md-4 wow bounceInUp"
+                 style="height: 900px">
+                <div class="box">
+                    <div class="image-hover">
+                        <div class="hover-details">
+                            <a asp-controller="Manga"
+                               asp-action="Details"
+                               asp-route-id="@item.Id"><i class="fa fa-link"></i></a>
+                            <a href="@item.ImageUrl"
+                               class="swipebox">
+                                <i class="fa fa-search"></i>
+                            </a>
+                            <p>@item.UploadDate</p>
+                        </div>
+                        <img src="@item.ImageUrl"
+                             alt="post img"
+                             height="650" />
+                    </div>
+                    <h2>
+                        <a asp-action="Details"
+                           asp-controller="Manga"
+                           asp-route-id="@item.Id">
+                            @item.Title
+                        </a>
+                    </h2>
+                    @if (item.Summary != null && item.Summary.Length > 300)
+                    {
+                        <p>@item.Summary.Substring(0, 300) ...</p>
+                    }
+                    else
+                    {
+                        <p>@item.Summary</p>
+
+                    }
+                    <span class="align-right">
+                        <a asp-action="Details"
+                           asp-controller="Manga"
+                           asp-route-id="@item.Id"
+                           class="read-more">Okumaya Devam Et</a>
+                    </span>
+                </div>
+            </div>
+
+        }
+
+    </div>
+</div>
+

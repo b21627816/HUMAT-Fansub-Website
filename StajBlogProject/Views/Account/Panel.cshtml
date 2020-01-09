@@ -1,0 +1,184 @@
+﻿@model PanelViewModel
+
+@{
+    ViewBag.Title = "HÜMAT - Yetkili Paneli";
+}
+
+
+<div class="row">
+    <div class="col col-md-4" style="word-wrap: break-word;">
+        <h4>Gönderiler</h4>
+        <a class="btn btn-success m-2"
+           asp-controller="Blog"
+           asp-action="Create">
+            Yeni Gönderi
+        </a>
+        <table class="table table-bordered table-hover text-md-center">
+            <thead>
+            <tr>
+                <th> Gönderi </th>
+                <th style="width: 30%"> İşlemler </th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @foreach (var item in Model.Posts.OrderByDescending(t=>t.PostDate))
+            {
+                <tr>
+                    <td>
+                        <p class=" m-3">@item.Title</p>
+                    </td>
+                    <td>
+                        <a asp-controller="Blog"
+                           asp-action="Edit"
+                           asp-route-id="@item.Id"
+                           class="btn btn-primary m-2">
+                            Düzenle
+                        </a>
+                        <a class="btn btn-danger js-delete m-2"
+                           data-type="gönderi"
+                           data-controller="blog"
+                           data-action="delete"
+                           data-title="@item.Title"
+                           data-id="@item.Id">
+                            Sil
+                        </a>
+                    </td>
+                </tr>
+            }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="col col-md-4" style="word-wrap: break-word;">
+        <h4>Animeler</h4>
+        <a class="btn btn-success m-2"
+           asp-controller="Anime"
+           asp-action="Create">
+            Yeni Anime
+        </a>
+        <table class="table table-bordered table-hover text-md-center">
+            <thead>
+                <tr>
+                    <th> Anime </th>
+                    <th style="width: 45%"> İşlemler </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.Animes.OrderBy(n=>n.Title))
+                {
+                    <tr>
+                        <td>
+                            <p class=" m-3">@item.Title</p>
+                        </td>
+                        <td>
+                            <a class="btn btn-success m-2"
+                               asp-controller="Anime"
+                               asp-action="Episodes"
+                               asp-route-id="@item.Id">
+                                Bölümler
+                            </a>
+
+                            <a asp-controller="Anime"
+                               asp-action="Edit"
+                               asp-route-id="@item.Id"
+                               class="btn btn-primary m-2">
+                                Düzenle
+                            </a>
+                            <a class="btn btn-danger js-delete m-2"
+                               data-type="anime"
+                               data-controller="anime"
+                               data-action="delete"
+                               data-title="@item.Title"
+                               data-id="@item.Id">
+                                Sil
+                            </a>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="col col-md-4" style="word-wrap: break-word;">
+        <h4>Mangalar</h4>
+        <a class="btn btn-success m-2"
+           asp-controller="Manga"
+           asp-action="Create">
+            Yeni Manga
+        </a>
+        <table class="table table-bordered table-hover text-md-center">
+            <thead>
+            <tr>
+                <th> Manga </th>
+                <th style="width: 45%"> İşlemler </th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @foreach (var item in Model.Mangas.OrderBy(n=>n.Title))
+            {
+                <tr>
+                    <td>
+                        <p class=" m-3">@item.Title</p>
+                    </td>
+                    <td>
+                        <a class="btn btn-success m-2"
+                           asp-controller="Manga"
+                           asp-action="Chapters"
+                           asp-route-id="@item.Id">
+                            Bölümler
+                        </a>
+
+                        <a asp-controller="Manga"
+                           asp-action="Edit"
+                           asp-route-id="@item.Id"
+                           class="btn btn-primary m-2">
+                            Düzenle
+                        </a>
+                        <a class="btn btn-danger js-delete m-2"
+                           data-type="manga"
+                           data-controller="manga"
+                           data-action="delete"
+                           data-title="@item.Title"
+                           data-id="@item.Id">
+                            Sil
+                        </a>
+                    </td>
+                </tr>
+            }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        $(".table .js-delete").on("click",
+            function() {
+                var button = $(this);
+                bootbox.confirm({
+                    title: button.attr('data-title'),
+                    message:"\"" + button.attr('data-title') + "\" "+ button.attr('data-type')+"sini silmek istediğine emin misin?",
+                    size: "large",
+                    closeButton: false,
+                    backdrop: true,
+                    callback: function(result) {
+                        if (result) {
+                            $.ajax({
+                                url: "/"+button.attr('data-controller')+"/"+button.attr('data-action')+"/"+button.attr('data-id'),
+                                success: function() {
+                                    button.parents("tr").remove();
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        
+    });
+</script>

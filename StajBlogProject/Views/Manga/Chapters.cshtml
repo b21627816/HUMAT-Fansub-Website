@@ -1,0 +1,84 @@
+﻿@model PanelChaptersViewModel
+
+@{
+    ViewBag.Title = "HÜMAT - Yetkili Paneli - " + Model.Manga.Title + " Bölümleri";
+}
+
+
+<div class="row">
+    <div class="col col-md-4"></div>
+    <div class="col col-md-4" style="word-wrap: break-word;">
+        <h4>@Model.Manga.Title'ın Bölümleri</h4>
+        <a class="btn btn-success m-2"
+           asp-controller="Manga"
+           asp-action="CreateChapter"
+           asp-route-id="@Model.Manga.Id">
+            Yeni Bölüm
+        </a>
+        <table class="table table-bordered table-hover text-md-center">
+            <thead>
+                <tr>
+                    <th> Bölüm </th>
+                    <th style="width: 45%"> İşlemler </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.Chapters.OrderBy(s => s.ChapterNo))
+                {
+                    <tr>
+                        <td>
+                            <p class="m-3">@item.ChapterNo. Bölüm - @item.Title</p>
+                        </td>
+                        <td>
+                            <a asp-controller="Manga"
+                               asp-action="EditChapter"
+                               asp-route-id="@item.Id"
+                               class="btn btn-primary m-2">
+                                Düzenle
+                            </a>
+                            <a class="btn btn-danger js-delete m-2"
+                               data-controller="Manga"
+                               data-action="DeleteChapter"
+                               data-title="@item.Title"
+                               data-id="@item.Id">
+                                Sil
+                            </a>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="col col-md-4" style="word-wrap: break-word;"></div>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        $(".table .js-delete").on("click",
+            function() {
+                var button = $(this);
+                bootbox.confirm({
+                    title: button.attr('data-title'),
+                    message:"\"" + button.attr('data-title') + "\" "+ "bölümünü silmek istediğine emin misin?",
+                    size: "large",
+                    closeButton: false,
+                    backdrop: true,
+                    callback: function(result) {
+                        if (result) {
+                            $.ajax({
+                                url: "/"+button.attr('data-controller')+"/"+button.attr('data-action')+"/"+button.attr('data-id'),
+                                success: function() {
+                                    button.parents("tr").remove();
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+    });
+</script>

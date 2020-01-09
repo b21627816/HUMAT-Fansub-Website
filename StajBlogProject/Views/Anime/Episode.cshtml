@@ -1,0 +1,117 @@
+﻿
+@model EpisodeViewModel
+
+
+@{
+    ViewBag.Title = "HÜMAT - " + Model.AnimeName + " - " + Model.EpNo + ".Bölümü İzle";
+    var links = Model.Links.Split(",");
+}
+
+<style>
+    iframe#episodeFrame{ width: 100%; height: 516px;}
+</style>
+
+<div class="content">
+    <div class="container">
+        <ul class="post-selection text-center">
+            @if (Model.PrevEpisode != null)
+            {
+                <li class="prev-article ">
+                    <a asp-action="Episode"
+                       asp-controller="Anime"
+                       asp-route-id="@Model.PrevEpisode.Id">
+                        Önceki<br />
+                        Bölüm
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                </li>
+            }
+            @if (Model.NextEpisode != null)
+            {
+                <li class="next-article">
+                    <a asp-action="Episode"
+                       asp-controller="Anime"
+                       asp-route-id="@Model.NextEpisode.Id">
+                        Sonraki<br />
+                        Bölüm
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            }
+        </ul>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="box">
+                    <div class="blog-entry">
+                        <div class="entry-header">
+                            <div class="position-text">
+                                <i class="fa fa-video-camera"></i>
+                                <h3><a asp-action="Details" asp-route-id="@Model.AnimeId">@Model.AnimeName</a> - @Model.EpNo. Bölüm - @Model.Title</h3>
+                            </div>
+                            <div class="js-video" id="js-video">
+                                <iframe id='episodeFrame' src='@links[0]' frameborder='0' allowfullscreen></iframe>
+                            </div>
+                            <div class="row">
+                                <div class="col-8">
+                                    @for (int i = 1; i <= links.Length && links[i - 1] != string.Empty; i++)
+                                    {
+
+                                        <a class="btn btn-secondary js-alternative ml-3"
+                                           href="@links.GetValue(i - 1)"
+                                           onclick="return changeVideo(this.href);">
+                                            Alternatif @i
+                                        </a>
+
+                                    }
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div id="disqus_thread"></div>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+
+        </div>
+        
+    </div>
+</div>
+
+
+<script>
+
+    /**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "http://localhost:56882/Anime/Episode/"+@Model.Id;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "Episode - "+@Model.Id; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://humat.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+<script>
+
+    function changeVideo(url) {
+        var $iframe = $(".js-video #episodeFrame");
+        if ($iframe.length) {
+            $iframe.attr('src', url);
+            return false;
+        }
+        return true;
+    };
+
+</script>

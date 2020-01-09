@@ -1,0 +1,95 @@
+﻿@inject SignInManager<IdentityUser> signInManager;
+
+<header class="header" id="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="logo">
+                    <a asp-controller="Blog"
+                       asp-action="Index">Hümat Fansub</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <nav class="main-nav">
+                    <div class="responsive-menu">Menu</div>
+                    <ul>
+                        <li>
+                            <a class="d-text-c-h d-border-c-h"
+                               asp-controller="Blog"
+                               asp-action="Index">Blog</a>
+                        </li>
+                        <li>
+                            <a class="d-text-c-h d-border-c-h"
+                               asp-controller="Anime"
+                               asp-action="Index">Animeler</a>
+                        </li>
+                        <li id="menu-margin">
+                            <a class="d-text-c-h d-border-c-h" 
+                               asp-controller="Manga"
+                               asp-action="Index">Mangalar</a>
+                        </li>
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            <li>
+                                <a class="d-text-c-h d-border-c-h"
+                                   asp-controller="Account"
+                                   asp-action="Panel">
+                                    Yetkili Paneli
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a class="d-text-c-h d-border-c-h js-logout btn">
+                                            Çıkış Yap
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                            
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="d-text-c-h d-border-c-h"
+                                    asp-controller="Account"
+                                   asp-action="Login">
+                                    Yetkili Girişi
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="shadow"></div>
+</header>
+
+<script>
+    $(document).ready(function() {
+        $("#header .js-logout").on("click",
+            function() {
+                var button = $(this);
+                bootbox.confirm({
+                    title: "Çıkış Yap",
+                    message: "Çıkış yapmak istediğine emin misin?",
+                    size: "large",
+                    closeButton: false,
+                    backdrop: true,
+                    swapButtonOrder: true,
+                    callback: function(result) {
+                        if (result) {
+                            $.ajax({
+                                url: "/account/logout/",
+                                success: function() {
+                                    window.location.reload();
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+    });
+
+</script>
+

@@ -1,0 +1,138 @@
+﻿
+@model ChapterViewModel
+
+
+@{
+    ViewBag.Title = "HÜMAT - " + Model.Manga.Title + " - " + Model.ChNo + ".Bölümü Oku";
+}
+
+<div class="content mb-3">
+    <div class="container">
+        <ul class="post-selection text-center">
+            @if (Model.PrevCh != null)
+            {
+                <li class="prev-article ">
+                    <a asp-action="Chapter"
+                       asp-controller="Manga"
+                       asp-route-id="@Model.PrevCh.Id">
+                        Önceki<br />
+                        Bölüm
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                </li>
+            }
+
+            @if (Model.NextCh != null)
+            {
+                <li class="next-article">
+                    <a asp-action="Chapter"
+                       asp-controller="Manga"
+                       asp-route-id="@Model.NextCh.Id">
+                        Sonraki<br />
+                        Bölüm
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            }
+
+        </ul>
+        <div class="row m-3">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="box">
+                    <div class="blog-entry">
+                        <div class="entry-header">
+                            <div class="position-text">
+                                <i class="fa fa-video-camera"></i>
+                                <h3><a asp-action="Details" asp-route-id="@Model.Manga.Id">@Model.Manga.Title</a> - @Model.ChNo. Bölüm - @Model.Title </h3>
+                            </div>
+                            <div class="js-page" id="js-page">
+                                @foreach (var item in Model.Contents)
+                                {
+                                    <img src="~/Mangas/@Model.Manga.Id/@Model.ChNo/@item.Name" title="@item.Name" width="876.33" /><br />
+                                }
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            @if (Model.PrevCh != null)
+                            {
+                                <a asp-action="Chapter"
+                                   asp-controller="Manga"
+                                   asp-route-id="@Model.PrevCh.Id"
+                                   class="btn btn-outline-primary">
+                                    <span class="glyphicon glyphicon-arrow-left"></span>
+                                    Önceki Bölüm
+                                </a>
+                            }
+                        </div>
+                        <div class="col-md-8"></div>
+                        <div class="col-md-2">
+                            @if (Model.NextCh != null)
+                            {
+                                <a asp-action="Chapter"
+                                   asp-controller="Manga"
+                                   asp-route-id="@Model.NextCh.Id"
+                                   class="btn btn-outline-primary">
+                                    Sonraki Bölüm
+                                    <span class="glyphicon glyphicon-arrow-right"></span>
+                                </a>
+                            }
+                        </div>
+                    </div><br/><br/>
+                    <div id="disqus_thread"></div>
+
+                </div>
+
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+
+
+
+    </div>
+    
+</div>
+
+
+
+<script>
+
+    /**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+    var disqus_config = function () {
+        this.page.url = "http://localhost:56882/Manga/Chapter/"+@Model.Id;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "Chapter - "+@Model.Id; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://humat.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+<script>
+
+    function changePage(url) {
+        var $iframe = $(".js-page #chapterPage");
+        if ($iframe.length) {
+            $iframe.attr('src', url);
+            return false;
+        }
+        return true;
+    };
+
+</script>
